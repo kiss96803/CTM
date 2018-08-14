@@ -18,7 +18,7 @@ namespace ConferenceSchedule.Models
         public override string ToString()
         {
             var text = base.ToString();
-            var lunchTime = StartTime.AddMinutes(TotalDuration);
+            var lunchTime = new DateTime(tomorrow.Year, tomorrow.Month, tomorrow.Day, 12, 0, 0, 0);
             return string.Format("{0}{1} Lunch\n", text, lunchTime.ToString("hh:mmtt", CultureInfo.InvariantCulture));
         }
     }

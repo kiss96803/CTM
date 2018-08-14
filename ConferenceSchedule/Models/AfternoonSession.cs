@@ -15,7 +15,7 @@ namespace ConferenceSchedule.Models
         /// Constructor
         /// </summary>
         public AfternoonSession() :
-            base(new DateTime(tomorrow.Year, tomorrow.Month, tomorrow.Day, 13, 0, 0, 0), new DateTime(tomorrow.Year, tomorrow.Month, tomorrow.Day, 16, 0, 0, 0), new DateTime(tomorrow.Year, tomorrow.Month, tomorrow.Day, 17, 0, 0, 0))
+            base(new DateTime(tomorrow.Year, tomorrow.Month, tomorrow.Day, 13, 0, 0, 0), new DateTime(tomorrow.Year, tomorrow.Month, tomorrow.Day, 17, 0, 0, 0))
         { }
 
         public override string ToString()
