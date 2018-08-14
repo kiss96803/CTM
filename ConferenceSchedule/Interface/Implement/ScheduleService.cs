@@ -70,14 +70,14 @@ namespace ConferenceSchedule.Interface.Implement
             {
                 if (conference.Duration <= trackDay.Morning.AvailableMinutes || conference.Duration <= trackDay.Afternoon.AvailableMinutes)
                 {
-                    if (trackDay.Afternoon.AvailableMinutes > trackDay.Morning.AvailableMinutes)
+                    if (trackDay.Morning.AvailableMinutes > conference.Duration)
                     {
-                        trackDay.Afternoon.AddConference(conference);
+                        trackDay.Morning.AddConference(conference);
                         break;
                     }
                     else
                     {
-                        trackDay.Morning.AddConference(conference);
+                        trackDay.Afternoon.AddConference(conference);
                         break;
                     }
                 }
