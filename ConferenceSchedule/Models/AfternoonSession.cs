@@ -22,6 +22,10 @@ namespace ConferenceSchedule.Models
         {
             var text = base.ToString();
             var networkingTime = StartTime.AddMinutes(TotalDuration);
+            if (networkingTime.Hour < 16)
+            {
+                networkingTime = new DateTime(tomorrow.Year, tomorrow.Month, tomorrow.Day, 16, 0, 0, 0);
+            }
             return string.Format("{0}{1} Networking Event\n", text, networkingTime.ToString("hh:mmtt", CultureInfo.InvariantCulture));
         }
     }

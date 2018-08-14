@@ -18,7 +18,7 @@ namespace ConferenceSchedule.Interface.Implement
         /// <returns></returns>
         public IList<TrackDay> Schedule(IList<Conference> conferences)
         {
-            var orderedConferences = conferences.Where(t => t.Duration < 121).ToList();
+            var orderedConferences = conferences.Where(t => t.Duration < 241).ToList();
             if (orderedConferences.Count == 0)
             {
                 Console.WriteLine("No Conference!");
