@@ -20,12 +20,13 @@ namespace ConferenceSchedule
 
         static void Main(string[] args)
         {
-            if (args.Length == 0)
-            {
-                Console.WriteLine("TestDataPath is empty!");
-                return;
-            }
-            string filePath = args[0];
+            //if (args.Length == 0)
+            //{
+            //    Console.WriteLine("TestDataPath is empty!");
+            //    return;
+            //}
+            //string filePath = args[0];
+            string filePath = @"C:\Users\ylf\Desktop\Conference Track Management\SourceCode\ConferenceTrackManagement\ConferenceSchedule\TestData.txt";
             if (!File.Exists(filePath))
             {
                 Console.WriteLine("TestDataFile does not exist!");

@@ -18,7 +18,7 @@ namespace ConferenceSchedule.Models
         {
             Subject = subjcet;
             Duration = duration;
-            IsLighting = duration == 15 ? true : false;
+            IsLighting = duration == 5 ? true : false;
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace ConferenceSchedule.Models
         /// <returns></returns>
         public override string ToString()
         {
-            return Duration != 15 ? string.Format("{0} {1}min", Subject, Duration) : string.Format("{0} lightning", Subject);
+            return Duration != 5 ? string.Format("{0} {1}min", Subject, Duration) : string.Format("{0} lightning", Subject);
         }
     }
 }

@@ -31,7 +31,7 @@ namespace ConferenceSchedule.Interface.Implement
             string subject = string.Join(" ", words.Take(words.Length - 1));
 
             string textDuration = words.Last();
-            int duration = textDuration.Equals(_lightningStr, StringComparison.OrdinalIgnoreCase) ? 15 : int.Parse(textDuration.ReplaceInsensitive(_timeUnit, ""));
+            int duration = textDuration.Equals(_lightningStr, StringComparison.OrdinalIgnoreCase) ? 5 : StringExtension.GetNumberInt(textLine);
 
             return new Conference(subject, duration);
         }
