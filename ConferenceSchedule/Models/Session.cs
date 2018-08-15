@@ -15,13 +15,11 @@ namespace ConferenceSchedule.Models
         /// <param name="startTime"></param>
         /// <param name="endTime"></param>
         /// <param name="endTimeExtended"></param>
-        protected Session(DateTime startTime, DateTime endTime, DateTime endTimeExtended)
+        protected Session(DateTime startTime, DateTime endTime)
         {
             StartTime = startTime;
             EndTime = endTime;
-            EndTimeExtended = endTimeExtended;
             AvailableMinutes = (int)EndTime.Subtract(StartTime).TotalMinutes;
-            AvailableMinutesExtended = (int)EndTimeExtended.Subtract(StartTime).TotalMinutes;
             var collection = (ObservableCollection<Conference>)Conferences;
             collection.CollectionChanged += OnCollectionChanged;
         }
@@ -34,12 +32,7 @@ namespace ConferenceSchedule.Models
         /// <summary>
         /// Available minutes in session
         /// </summary>
-        protected int AvailableMinutes { get; private set; }
-
-        /// <summary>
-        /// Available extended minutes in session
-        /// </summary>
-        protected int AvailableMinutesExtended { get; private set; }
+        public int AvailableMinutes { get; private set; }
 
         /// <summary>
         /// Session end time
@@ -60,13 +53,6 @@ namespace ConferenceSchedule.Models
         /// List of talks in a session
         /// </summary>
         protected IList<Conference> Conferences { get; } = new ObservableCollection<Conference>();
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="startTime"></param>
-        /// <param name="endTime"></param>
-        protected Session(DateTime startTime, DateTime endTime) : this(startTime, endTime, endTime) { }
 
         /// <summary>
         /// Add talks to session if time is available
@@ -94,15 +80,6 @@ namespace ConferenceSchedule.Models
             return AddConference(talk, false);
         }
 
-        /// <summary>
-        /// Return available minutes in session
-        /// </summary>
-        /// <param name="extended">Should consider extended time</param>
-        /// <returns></returns>
-        public int CalculatedAvailableMinutes(bool extended)
-        {
-            return extended ? AvailableMinutesExtended : AvailableMinutes;
-        }
 
         public override string ToString()
         {
@@ -143,7 +120,6 @@ namespace ConferenceSchedule.Models
                 {
                     TotalDuration += newItem.Duration;
                     AvailableMinutes -= newItem.Duration;
-                    AvailableMinutesExtended -= newItem.Duration;
                 }
             }
         }

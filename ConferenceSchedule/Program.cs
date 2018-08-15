@@ -26,7 +26,7 @@ namespace ConferenceSchedule
             //    return;
             //}
             //string filePath = args[0];
-            string filePath = @"C:\Users\ylf\Desktop\Conference Track Management\SourceCode\ConferenceTrackManagement\ConferenceSchedule\TestData.txt";
+            string filePath = @"C:\Users\Revolution\Desktop\ConferenceTrackManagement\ConferenceSchedule\TestData.txt";
             if (!File.Exists(filePath))
             {
                 Console.WriteLine("TestDataFile does not exist!");
@@ -40,11 +40,18 @@ namespace ConferenceSchedule
                 conferences.Add(_conferenceConverter.Convert(line));
             }
 
-            foreach (var session in _scheduleService.Schedule(conferences))
+            var scheduleResult = _scheduleService.Schedule(conferences);
+            if (scheduleResult != null)
             {
-                Console.WriteLine(session);
+                foreach (var session in scheduleResult)
+                {
+                    Console.WriteLine(session);
+                }
             }
-
+            else
+            {
+                Console.WriteLine($"There is no conferece in {Path.GetFileName(filePath)} ");
+            }
         }
     }
 }

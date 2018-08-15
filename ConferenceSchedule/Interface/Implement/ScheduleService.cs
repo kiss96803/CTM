@@ -1,4 +1,6 @@
 ﻿using ConferenceSchedule.Models;
+using ConferenceSchedule.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -16,60 +18,71 @@ namespace ConferenceSchedule.Interface.Implement
         /// <returns></returns>
         public IList<TrackDay> Schedule(IList<Conference> conferences)
         {
-            var trackDays = new List<TrackDay>();
-            var orderedConferences = conferences.OrderByDescending(t => t.Duration).ToList();
-            int trackNumber = 0;
-            while (orderedConferences.Count > 0)
+            var orderedConferences = conferences.Where(t => t.Duration < 241).ToList();
+            if (orderedConferences.Count == 0)
             {
-                trackNumber++;
-                var day = new TrackDay(trackNumber.ToString());
-                bool morning = true;
-                do
+                Console.WriteLine("No Conference!");
+                return null;
+            }
+            else
+            {
+                return ScheduleConference(orderedConferences).OrderBy(t => t.Name).ToList();
+            }
+        }
+
+        /// <summary>
+        /// ScheduleConference
+        /// </summary>
+        /// <param name="conferences"></param>
+        /// <returns></returns>
+        private static List<TrackDay> ScheduleConference(IList<Conference> conferences)
+        {
+            var trackDays = new List<TrackDay>();
+            var trackDayNum = 1;
+            var firstTrackDay = new TrackDay(trackDayNum.ToString());
+            trackDays.Add(firstTrackDay);
+            foreach (var conference in conferences)
+            {
+                if (trackDays.Max(t => t.Afternoon.AvailableMinutes) > conference.Duration || trackDays.Max(t => t.Morning.AvailableMinutes) > conference.Duration)
                 {
-                    var session = morning ? day.Morning : (Session)day.Afternoon;
-                    AddConference(orderedConferences, session, false);
-                    morning = !morning;
-                } while (!morning);
-                trackDays.Add(day);
-                if (orderedConferences.Sum(t => t.Duration) <= trackDays.Sum(t => t.Afternoon.CalculatedAvailableMinutes(true)))
+                    trackDays = AddConferenceToTrackDay(conference, trackDays);
+                }
+                else
                 {
-                    foreach (var trackDay in trackDays)
-                    {
-                        AddConference(orderedConferences, trackDay.Afternoon, true);
-                    }
+                    trackDayNum++;
+                    trackDays.Add(new TrackDay(trackDayNum.ToString()));
+                    trackDays[trackDayNum - 1].Morning.AddConference(conference);
                 }
             }
             return trackDays;
         }
 
         /// <summary>
-        /// Fill slots in a given session
+        /// AddConferenceToTrackDay
         /// </summary>
-        /// <param name="conferences"></param>
-        /// <param name="session"></param>
-        /// <param name="extended">Should use extended time</param>
-        private static void AddConference(IList<Conference> conferences, Session session, bool extended)
+        /// <param name="conference"></param>
+        /// <param name="trackDays"></param>
+        /// <returns></returns>
+        private static List<TrackDay> AddConferenceToTrackDay(Conference conference, List<TrackDay> trackDays)
         {
-            while (session.AddConference(conferences.FirstOrDefault(), extended))
+            trackDays = RandomHelper.GetRandomList(trackDays);
+            foreach (var trackDay in trackDays)
             {
-                conferences.RemoveAt(0);
-            }
-
-            // There is time available
-            while (session.CalculatedAvailableMinutes(extended) > 0)
-            {
-                // Find a session to fill the remainer slot
-                var equalLessTime = conferences.SingleOrDefault(t => t.Duration == session.CalculatedAvailableMinutes(extended)) ?? conferences.SingleOrDefault(t => t.Duration < session.CalculatedAvailableMinutes(extended));
-                if (equalLessTime != null)
+                if (conference.Duration <= trackDay.Morning.AvailableMinutes || conference.Duration <= trackDay.Afternoon.AvailableMinutes)
                 {
-                    session.AddConference(equalLessTime, extended);
-                    conferences.Remove(equalLessTime);
-                }
-                else
-                {
-                    break;
+                    if (trackDay.Morning.AvailableMinutes > conference.Duration)
+                    {
+                        trackDay.Morning.AddConference(conference);
+                        break;
+                    }
+                    else
+                    {
+                        trackDay.Afternoon.AddConference(conference);
+                        break;
+                    }
                 }
             }
+            return trackDays;
         }
     }
 }
